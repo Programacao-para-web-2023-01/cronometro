@@ -1,6 +1,3 @@
-"use client"
-
-import {useEffect, useState} from "react";
 import Task from "@/app/components/Task";
 
 export interface TaskType {
@@ -9,17 +6,19 @@ export interface TaskType {
     title: string
     completed:boolean
 }
-export default function TasksList() {
-    const [tasks, setTasks] = useState<TaskType[]>([])
 
-    useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/todos").
-        then((response) => response.json()).
-        then((data) => setTasks(data))
-    }, [])
+async function getTasks(): Promise<TaskType[]> {
+    const data = await fetch("https://jsonplaceholder.typicode.com/todos").
+    then((response) => response.json())
+
+    return data
+}
+export default async function TasksList() {
+    const tasks = await getTasks()
 
     return (
         <main className="flex min-h-screen flex-col items-center p-24">
+            <div className={"text-4xl"}>Tarefas</div>
             {tasks.map(t => (
                 <Task
                     key={t.id}

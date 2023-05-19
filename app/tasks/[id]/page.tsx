@@ -1,20 +1,17 @@
-"use client"
-
 import Task from "@/app/components/Task";
-import {useEffect, useState} from "react";
 import {TaskType} from "@/app/tasks/page";
 
-export default function TaskID({params}: { params: { id: number } }) {
-    const [task, setTask] = useState<TaskType>()
+async function getTask(id: number) {
+    return fetch(`https://jsonplaceholder.typicode.com/todos/${id}`).then((response) => response.json())
+}
 
-    useEffect(() => {
-        fetch(`https://jsonplaceholder.typicode.com/todos/${params.id}`).
-        then((response) => response.json()).
-        then((data) => setTask(data))
-    }, [params.id])
-
+export default async function TaskID({params}: { params: { id: number } }) {
+    const task = await getTask(params.id)
 
     return (
-        <Task title={task?.title ?? ""} completed={!!task?.completed} />
+        <main className="flex min-h-screen flex-col items-center p-24">
+            <div className={"text-4xl"}>Tarefa</div>
+            <Task title={task?.title ?? ""} completed={!!task?.completed}/>
+        </main>
     )
 }
